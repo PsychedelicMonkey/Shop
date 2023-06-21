@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.views.generic import DetailView, ListView
+from cart.forms import CartAddProductForm
 from .models import Product
 
 
@@ -20,6 +21,11 @@ class ProductList(ListView):
 
 class ProductDetail(DetailView):
     model = Product
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = CartAddProductForm()
+        return context
 
     def get_queryset(self):
         queryset = super().get_queryset()

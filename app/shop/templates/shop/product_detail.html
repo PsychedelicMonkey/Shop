@@ -6,6 +6,14 @@
 
 <div>{{ product.description }}</div>
 
+<form action="{% url 'cart-add' product_id=product.pk %}" method="post">
+    {% csrf_token %}
+
+    {{ form.as_p }}
+
+    <button type="submit">Add to cart</button>
+</form>
+
 <div>
     {% with images=product.images.all %}
     {% for image in images %}
