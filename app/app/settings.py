@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap4',
 
+    'account.apps.AccountConfig',
     'cart.apps.CartConfig',
     'shop.apps.ShopConfig',
 ]
@@ -134,6 +135,12 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'static/img')
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'home'
+
+LOGOUT_URL = 'logout'
+LOGOUT_REDIRECT_URL = 'home'
 
 CART_SESSION_ID = 'cart'
 
