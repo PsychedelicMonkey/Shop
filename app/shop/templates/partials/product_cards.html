@@ -1,0 +1,17 @@
+<div class="row">
+    {% for product in products %}
+    {% with image=product.images.first %}
+    <div class="col-md-4">
+        <div class="card">
+            <img src="{{ image.url }}" alt="{{ image.caption }}" class="card-img-top" />
+            <div class="card-body">
+                <h5 class="card-title">{{ product.name }}</h5>
+                <p class="card-text">${{ product.price }}</p>
+
+                <a href="{% url 'product-detail' product.slug %}" class="btn btn-primary">View Product</a>
+            </div>
+        </div>
+    </div>
+    {% endwith %}
+    {% endfor %}
+</div>

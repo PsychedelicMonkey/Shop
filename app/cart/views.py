@@ -29,3 +29,4 @@ def cart_remove(request, product_id):
     product = get_object_or_404(Product, pk=product_id)
     cart.remove(product)
     return redirect('cart-detail')
+

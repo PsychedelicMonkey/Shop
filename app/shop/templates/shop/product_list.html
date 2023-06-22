@@ -3,20 +3,5 @@
 {% block content %}
 <h1>Products ({{ products|length }})</h1>
 
-<div>
-    {% for product in products %}
-    {% with image=product.images.first %}
-    <div>
-        <hr>
-
-        <img src="{{ image.url }}" alt="" width="300" />
-        
-        <h3>{{ product.name }}</h3>
-        <h5>${{ product.price }}</h5>
-
-        <a href="{% url 'product-detail' product.slug %}">View Product</a>
-    </div>
-    {% endwith %}
-    {% endfor %}
-</div>
+{% include "partials/product_cards.html" %}
 {% endblock %}

@@ -39,6 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'crispy_forms',
+    'crispy_bootstrap4',
+
     'cart.apps.CartConfig',
     'shop.apps.ShopConfig',
 ]
@@ -133,3 +136,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'static/img')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CART_SESSION_ID = 'cart'
+
+# Crispy forms
+# https://django-crispy-forms.readthedocs.io/en/latest/
+# https://pypi.org/project/crispy-bootstrap4/
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap4'
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
