@@ -1,8 +1,39 @@
+from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_POST
 from shop.models import Product
 from .cart import Cart
 from .forms import CartAddProductForm
+import stripe
+
+
+@require_POST
+def checkout(request):
+    try:
+        cart = Cart(request)
+        line_items = []
+        for item in cart:
+            line_items.append({
+                'price_data': {
+                    'currency': 'cad',
+                    'product_data': {
+                        'name': item['product'].name,
+                    },
+                    'unit_amount': int(item['price'] * 100),
+                },
+                'quantity': item['quantity'],
+            })
+
+        stripe.api_key = settings.STRIPE_SECRET_KEY
+        checkout_session = stripe.checkout.Session.create(
+            line_items=line_items,
+            mode='payment',
+            success_url='http://localhost:8000/success.html',
+            cancel_url='http://localhost:8000/cart/'
+        )
+        return redirect(checkout_session.url)
+    except Exception as e:
+        print(str(e))
 
 
 def cart_detail(request):
