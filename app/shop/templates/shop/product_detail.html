@@ -8,7 +8,7 @@
         <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
             <ol class="carousel-indicators">
                 {% for image in images %}
-                <li data-target="#carouselExampleIndicators" data-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active"{% endif %}></li>
+                <li data-target="#carouselExampleIndicators" data-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active" {% endif %}></li>
                 {% endfor %}
             </ol>
             <div class="carousel-inner">
@@ -46,4 +46,44 @@
         </form>
     </div>
 </div>
+
+<hr class="mt-4">
+
+{% with reviews=product.reviews.all %}
+<div>
+    <div class="d-flex justify-content-between align-items-center">
+        <h3>Product Reviews <small class="text-muted">{{ reviews.count }}</small></h3>
+
+        <a href="{% url 'review-create' product.pk %}" class="btn btn-primary">Write a Review</a>
+    </div>
+
+    {% if reviews %}
+    <ul class="list-unstyled">
+        {% for review in reviews %}
+        <li class="media my-4">
+<!--            <img src="#" alt="#" class="align-self-start mr-3"/>-->
+            <div class="media-body">
+                <h5 class="mt-0">
+                    {% with ''|center:review.rating as range %}
+                    {% for _ in range %}
+                    <span>&#9733;</span>
+                    {% endfor %}
+                    {% endwith %}
+                </h5>
+                <h5 class="mt-0">{{ review.title }}</h5>
+                <p>{{ review.user.username }}, <small class="text-muted">{{ review.created_at|date:"F j, Y" }}</small></p>
+                {% if review.body %}
+                {{ review.body|linebreaks }}
+                {% endif %}
+            </div>
+        </li>
+
+        <hr>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</div>
+{% endwith %}
+
+{% include 'partials/footer.html' %}
 {% endblock %}

@@ -1,7 +1,8 @@
-from django.shortcuts import render
-from django.views.generic import DetailView, ListView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import render, get_object_or_404
+from django.views.generic import CreateView, DetailView, ListView
 from cart.forms import CartAddProductForm
-from .models import Product
+from .models import Product, ProductReview
 
 
 def home(request):
@@ -30,3 +31,18 @@ class ProductDetail(DetailView):
     def get_queryset(self):
         queryset = super().get_queryset()
         return queryset.filter(is_available=True)
+
+
+class ProductReviewCreate(LoginRequiredMixin, CreateView):
+    model = ProductReview
+    fields = ('rating', 'title', 'body',)
+
+    def dispatch(self, request, *args, **kwargs):
+        # Attach the product pk to the form
+        self.product = get_object_or_404(Product, pk=self.kwargs.get('pk'))
+        return super(ProductReviewCreate, self).dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        form.instance.product = self.product
+        return super().form_valid(form)
