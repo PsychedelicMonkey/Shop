@@ -6,7 +6,7 @@
         {% if review.user.profile.is_private %}
         <img src="{% static 'img/profile-blank.png' %}" alt="#" class="align-self-start mr-3" width="64"/>
         {% else %}
-        <img src="{{ user.profile.image_url }}" alt="#" class="align-self-start mr-3" width="64"/>
+        <img src="{{ review.user.profile.image_url }}" alt="#" class="align-self-start mr-3" width="64"/>
         {% endif %}
         <div class="media-body">
             <h5 class="mt-0">
