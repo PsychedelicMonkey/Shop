@@ -1,0 +1,12 @@
+{% extends "shop/base.html" %}
+
+{% block content %}
+{% with profile=user.profile %}
+<h1>{{ user.username }}</h1>
+
+<img src="{{ profile.image_url }}" alt="" />
+<div>{{ profile.bio }}</div>
+
+<a href="{% url 'edit-profile' %}" class="btn btn-primary">Edit Profile</a>
+{% endwith %}
+{% endblock %}

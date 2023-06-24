@@ -58,29 +58,7 @@
     </div>
 
     {% if reviews %}
-    <ul class="list-unstyled">
-        {% for review in reviews %}
-        <li class="media my-4">
-<!--            <img src="#" alt="#" class="align-self-start mr-3"/>-->
-            <div class="media-body">
-                <h5 class="mt-0">
-                    {% with ''|center:review.rating as range %}
-                    {% for _ in range %}
-                    <span>&#9733;</span>
-                    {% endfor %}
-                    {% endwith %}
-                </h5>
-                <h5 class="mt-0">{{ review.title }}</h5>
-                <p>{{ review.user.username }}, <small class="text-muted">{{ review.created_at|date:"F j, Y" }}</small></p>
-                {% if review.body %}
-                {{ review.body|linebreaks }}
-                {% endif %}
-            </div>
-        </li>
-
-        <hr>
-        {% endfor %}
-    </ul>
+    {% include "partials/review_list.html" %}
     {% endif %}
 </div>
 {% endwith %}
