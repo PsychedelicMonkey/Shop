@@ -1,4 +1,6 @@
 from django.conf import settings
+from django.http import Http404
+from django.http.response import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_POST
 from shop.models import Product
@@ -7,33 +9,36 @@ from .forms import CartAddProductForm
 import stripe
 
 
-@require_POST
 def checkout(request):
-    try:
-        cart = Cart(request)
-        line_items = []
-        for item in cart:
-            line_items.append({
-                'price_data': {
-                    'currency': 'cad',
-                    'product_data': {
-                        'name': item['product'].name,
-                    },
-                    'unit_amount': int(item['price'] * 100),
-                },
-                'quantity': item['quantity'],
-            })
+    cart = Cart(request)
+    return render(request, 'cart/checkout.html', {'cart': cart, 'stripe_client_key': settings.STRIPE_CLIENT_KEY})
 
-        stripe.api_key = settings.STRIPE_SECRET_KEY
-        checkout_session = stripe.checkout.Session.create(
-            line_items=line_items,
-            mode='payment',
-            success_url='http://localhost:8000/success.html',
-            cancel_url='http://localhost:8000/cart/'
-        )
-        return redirect(checkout_session.url)
-    except Exception as e:
-        print(str(e))
+
+def create_payment(request):
+    if request.method == 'POST':
+        try:
+            cart = Cart(request)
+            stripe.api_key = settings.STRIPE_SECRET_KEY
+
+            total_price = int(cart.get_total_price() * 100)
+
+            intent = stripe.PaymentIntent.create(
+                amount=total_price,
+                currency='cad',
+            )
+
+            return JsonResponse({
+                'clientSecret': intent['client_secret'],
+            })
+        except Exception as e:
+            return JsonResponse({'error': str(e)})
+    raise Http404
+
+
+def success(request):
+    cart = Cart(request)
+    cart.clear()
+    return render(request, 'cart/success.html')
 
 
 def cart_detail(request):
